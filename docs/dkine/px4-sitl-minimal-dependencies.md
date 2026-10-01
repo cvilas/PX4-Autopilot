@@ -1,6 +1,8 @@
 # PX4 SITL with Minimal External Dependencies
 
-This workflow runs PX4 SITL natively on Linux, including ARM64 hosts, using PX4's built-in Software-in-the-Loop (SIH) simulator. SIH runs the vehicle physics inside the PX4 process, so it does not require an external simulator such as Gazebo.
+- Runs PX4 SITL natively on Linux X86_64 and AARCH64
+- Uses PX4's built-in Software-in-the-Loop (SIH) simulator.
+- SIH runs the vehicle physics inside the PX4 process, so it does not require an external simulator such as Gazebo.
 
 ## Host and Python dependencies
 
@@ -13,7 +15,7 @@ python -m pip install --upgrade pip
 python -m pip install -r Tools/setup/requirements.txt
 ```
 
-The requirements file constrains EmPy to `>=3.3,<4`. EmPy 4.x is incompatible with PX4's template generators; in particular, configuration can fail with `AttributeError: module 'em' has no attribute 'RAW_OPT'`. Using the requirements file in the active environment avoids accidentally selecting an incompatible system or user-installed EmPy.
+> The requirements file constrains EmPy to `>=3.3,<4`. EmPy 4.x is incompatible with PX4's template generators.
 
 ## Build and run SIH
 
