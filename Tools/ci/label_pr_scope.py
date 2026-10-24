@@ -343,12 +343,6 @@ def main():
     theirs = current - ours
 
     target = None if theirs else pick_scope(pr['title'], files, paths)
-    if target and target not in current:
-        labels = {label['name'] for label in client.paginated(f'repos/{repo}/labels')}
-        if target not in labels:
-            print('skipping unavailable scope label: {}'.format(target))
-            target = None
-
     remove = sorted(ours - {target})
     add = target if target and target not in current else None
 
