@@ -1,0 +1,70 @@
+name: Sync labels from upstream
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  push:
+    paths:
+      - '.github/labeler.yml'
+      - '.github/workflows/label.yml'
+      - '.github/workflows/sync_labels.yml'
+      - 'Tools/ci/label_pr_scope.py'
+
+permissions:
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const upstream = await github.paginate(
+              github.rest.issues.listLabelsForRepo,
+              { owner: 'PX4', repo: 'PX4-Autopilot', per_page: 100 }
+            );
+            const existing = await github.paginate(
+              github.rest.issues.listLabelsForRepo,
+              { owner: context.repo.owner, repo: context.repo.repo, per_page: 100 }
+            );
+            const labelsByName = new Map(existing.map(label => [label.name, label]));
+
+            for (const label of upstream) {
+              const current = labelsByName.get(label.name);
+              if (!current) {
+                try {
+                  await github.rest.issues.createLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    name: label.name,
+                    color: label.color,
+                    description: label.description,
+                  });
+                  core.info(`Created label: ${label.name}`);
+                } catch (error) {
+                  if (error.status !== 422) {
+                    throw error;
+                  }
+                  await github.rest.issues.updateLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    name: label.name,
+                    color: label.color,
+                    description: label.description,
+                  });
+                  core.info(`Updated concurrently created label: ${label.name}`);
+                }
+              } else if (current.color !== label.color || current.description !== label.description) {
+                await github.rest.issues.updateLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label.name,
+                  color: label.color,
+                  description: label.description,
+                });
+                core.info(`Updated label: ${label.name}`);
+              }
+            }
+
+            core.info(`Synchronized ${upstream.length} labels from PX4/PX4-Autopilot.`);

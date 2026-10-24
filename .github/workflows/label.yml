@@ -16,7 +16,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  sync-labels:
+    uses: ./.github/workflows/sync_labels.yml
+    permissions:
+      issues: write
+
   label:
+    needs: sync-labels
 
     runs-on: ubuntu-latest
     permissions:
@@ -49,11 +55,6 @@ jobs:
           test) label="kind:test" ;;
           docs|style|build|ci|chore|revert) label="kind:chore" ;;
         esac
-
-        if ! gh api "repos/$GH_REPO/labels/$label" >/dev/null 2>&1; then
-          echo "Label '$label' is not defined in this repository; skipping."
-          exit 0
-        fi
 
         current_labels="$(gh pr view "$PR_NUMBER" --json labels --jq '.labels[].name')"
 
