@@ -1,6 +1,11 @@
 name: PX4 Weekly Dev Call Post
 
 on:
+  # schedule:
+  #   # Every Monday at 10:00 UTC (2 days before Wednesday call)
+  #   # Format: minute hour day-of-month month day-of-week
+  #   # day-of-week: 0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat
+  #   - cron: '0 10 * * 1'
   workflow_dispatch:
     inputs:
       dry_run:

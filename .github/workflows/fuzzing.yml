@@ -1,5 +1,7 @@
 name: Fuzzing
 on:
+  # schedule:
+  #   - cron: '0 6 * * *'  # UTC 6am every day.
   workflow_dispatch:
 
 permissions:
