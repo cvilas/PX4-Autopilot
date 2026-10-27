@@ -1,47 +1,79 @@
-# PX4 SITL with Minimal External Dependencies
+# Software-in-the-loop (SITL) Simulation
 
-This workflow runs PX4 SITL natively on Linux, including ARM64 hosts, using PX4's built-in Software-in-the-Loop (SIH) simulator. SIH runs the vehicle physics inside the PX4 process, so it does not require an external simulator such as Gazebo.
+This workflow sets up the development environment to run PX4 SITL natively on Linux, including
+ARM64 hosts, using PX4's built-in Software-in-the-Loop (SIH) simulator. SIH runs the vehicle
+physics inside the PX4 process, so it does not require an external simulator such as Gazebo.
 
-## Host and Python dependencies
+## Setup developer environment
 
-Install the normal native build tools for your distribution: `make`, CMake, Ninja, a C++ compiler, and Python 3. Then create a virtual environment and install PX4's Python requirements from the repository root:
+- Install developmemt toolchain
+  - On [Ubuntu](https://docs.px4.io/main/en/dev_setup/dev_env_linux_ubuntu)
+    ```sh
+    sudo apt-get update
+    sudo apt-get install -y software-properties-common lsb-release ca-certificates sudo wget gnupg \
+    build-essential cmake make gcc g++ git curl ninja-build ccache python-is-python3 python3-dev \
+    python3-pip python3-setuptools python3-wheel lcov libssl-dev libxml2-dev libxml2-utils \
+    g++-multilib gcc-arm-none-eabi gcc-multilib
+    ```
+  - On Fedora
+    ```sh
+    sudo dnf install -y cmake git gcc g++ arm-none-eabi-gcc-cs arm-none-eabi-gcc-cs-c++ \
+    arm-none-eabi-binutils-cs arm-none-eabi-newlib
+    ```
 
-```sh
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -r Tools/setup/requirements.txt
-```
+## Software in the loop (SITL) simulation
 
-The requirements file constrains EmPy to `>=3.3,<4`. EmPy 4.x is incompatible with PX4's template generators; in particular, configuration can fail with `AttributeError: module 'em' has no attribute 'RAW_OPT'`. Using the requirements file in the active environment avoids accidentally selecting an incompatible system or user-installed EmPy.
+- Download and install QGroundControl [from here](https://docs.qgroundcontrol.com/master/en/qgc-user-guide/getting_started/download_and_install.html)
+- Build and start PX4 SITL with SIH's quadrotor-X model:
+  ```sh
+  # clone the repo
+  git clone https://github.com/PX4/PX4-Autopilot.git --recursive
+  cd PX4-Autopilot
 
-## Build and run SIH
+  # create virtual environment with python dependencies
+  python3 -m venv .venv
+  . .venv/bin/activate
+  python -m pip install --upgrade pip
+  python -m pip install -r Tools/setup/requirements.txt
 
-From the repository root, with the virtual environment active:
+  # build and start SITL sim
+  make px4_sitl_sih sihsim_quadx
+  ```
+  The simulator runs headless by default.
+- Build and start [Hawkeye](https://px4.github.io/Hawkeye/) visualiser
+  ```sh
+  # install additional graphics dependencies
+  sudo apt-get install -y libgl1-mesa-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev \
+  libxi-dev
 
-```sh
-make px4_sitl_sih sihsim_quadx
-```
+  # clone the repo
+  git clone --recursive https://github.com/PX4/Hawkeye.git
+  cd Hawkeye
 
-This builds and starts PX4 SITL with SIH's quadrotor-X model. The simulator runs headless by default. QGroundControl can connect over UDP port 14550 and show the vehicle on its map.
+  # build visualiser
+  cmake -S . -B build
+  cmake --build build --parallel
 
-Other SIH models and their support status are listed in the [SIH documentation](../en/sim_sih/index.md). The quadrotor is the stable model; the other listed vehicle types are experimental.
+  # start visualiser. It will connect with PX4 SITL over mavlink
+  ./build/hawkeye
+  ```
+- Start `QGroundControl` to connect over UDP port 14550 and show the vehicle on its map.
+- Refer to `QGroundControl` [user guide](https://docs.qgroundcontrol.com/master/en/qgc-user-guide/getting_started/quick_start.html) to
+  - Fly manually in `Position` mode
+  - Run a simple mission
 
-## Building NuttX board firmware
+## Build board firmware
 
-SITL does not need an embedded cross-compiler. Building firmware for a flight controller does: for example, the `px4_fmu-v6c_default` target requires the `arm-none-eabi` GCC toolchain. Fedora 44 provides ARM64-hosted packages for it:
+- Building firmware for a flight controller requires a cross-compiler
+  ```sh
+  make px4_fmu-v6c_default
+  ```
+- To open the board configurator instead
+  ```sh
+  make px4_fmu-v6c_default boardconfig
+  ```
 
-```sh
-sudo dnf install arm-none-eabi-gcc-cs arm-none-eabi-gcc-cs-c++ arm-none-eabi-binutils-cs arm-none-eabi-newlib
-arm-none-eabi-gcc --version
-arm-none-eabi-g++ --version
-```
+## References
 
-These tools run natively on aarch64 and generate code for the board's Cortex-M7 processor. The `arm-none-eabi-newlib` package also supplies `nosys.specs`, which the PX4 NuttX toolchain uses during compiler checks. After installing the toolchain, build the board target:
-
-```sh
-make px4_fmu-v6c_default
-```
-
-To open the board configurator instead, use `make px4_fmu-v6c_default boardconfig`.
-
+- [Ubuntu setup](https://docs.px4.io/main/en/dev_setup/dev_env_linux_ubuntu)
+- [SIH documentation](../en/sim_sih/index.md).

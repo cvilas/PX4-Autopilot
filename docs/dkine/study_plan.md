@@ -2,11 +2,17 @@
 
 ## Sequence
 
-- Setup development environment
-  - TODO: write a document here, extracting specific steps and referencing [dev env](https://docs.px4.io/main/en/dev_setup/dev_env)
-- Simulate a quadcopter flight with QGroundControl, PX4_SITL and HawkEye visualiser.
-  - TODO: update sitl.md to describe all steps
+- Follow [SITL](./sitl.md) to setup development environment and simulate quadrotor flight
   - TODO: integrate log reading exercise here from following section
+  - Read logs (ulog files):
+    - Use Flight Review, PlotJuggler, and pyulog to plot any uORB topic.
+    - Compare setpoints against estimates against actuator outputs.
+    - See all about logging and debugging: https://docs.px4.io/main/en/debug/
+  - Use the PX4 shell (`pxh>`) while SITL runs:
+    - `listener <topic>` to watch live data.
+    - `uorb top` to see message rates.
+    - `work_queue status` and `perf` to see scheduling and timing.
+  - Using QGC for logs: https://docs.qgroundcontrol.com/master/en/qgc-user-guide/analyze_view/
   - https://docs.px4.io/main/en/sim_sih/
   - https://docs.px4.io/main/en/sim_hawkeye/
   - simulate fail safes: https://docs.px4.io/main/en/simulation/failsafes
@@ -34,22 +40,6 @@
 - Write an offboard controller: https://docs.px4.io/main/en/ros/offboard_control
 - Harden the mavlink links for security: https://docs.px4.io/main/en/security/
 - Become a maintainer. Push our changes: https://docs.px4.io/main/en/contribute/maintainers
-
-## 1. Simulate
-
-**Exercise**: Follow [SITL guide](./sitl.md):
-  - Fly manually in `Position` mode
-  - Run a simple mission
-
-**Exercise**: Read logs (ulog files):
-  - Use Flight Review, PlotJuggler, and pyulog to plot any uORB topic.
-  - Compare setpoints against estimates against actuator outputs.
-  - See all about logging and debugging: https://docs.px4.io/main/en/debug/
-
-**Exercise**: Use the PX4 shell (`pxh>`) while SITL runs:
-- `listener <topic>` to watch live data.
-- `uorb top` to see message rates.
-- `work_queue status` and `perf` to see scheduling and timing.
 
 ## 2. Fly
 
