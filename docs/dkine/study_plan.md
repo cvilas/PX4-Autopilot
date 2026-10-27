@@ -1,5 +1,40 @@
 # Study plan for PX4-based Multi-Rotor UAS
 
+## Sequence
+
+- Setup development environment
+  - TODO: write a document here, extracting specific steps and referencing [dev env](https://docs.px4.io/main/en/dev_setup/dev_env)
+- Simulate a quadcopter flight with QGroundControl, PX4_SITL and HawkEye visualiser.
+  - TODO: update sitl.md to describe all steps
+  - TODO: integrate log reading exercise here from following section
+  - https://docs.px4.io/main/en/sim_sih/
+  - https://docs.px4.io/main/en/sim_hawkeye/
+  - simulate fail safes: https://docs.px4.io/main/en/simulation/failsafes
+- Write a [Hello World](https://docs.px4.io/main/en/modules/hello_sky) app
+  - TODO: create the app here, in a self contained place
+  - Write a new uORB topic: https://docs.px4.io/main/en/middleware/uorb
+- Write a task: https://docs.px4.io/main/en/modules/module_template
+- Write a work queue task: https://docs.px4.io/main/en/modules/module_template
+- Read system architecture
+  - https://docs.px4.io/main/en/concept/px4_systems_architecture
+  - https://docs.px4.io/main/en/concept/architecture
+  - https://docs.px4.io/main/en/flight_stack/controller_diagrams
+- https://docs.px4.io/main/en/advanced/parameters_and_configurations
+- https://docs.px4.io/main/en/concept/events_interface
+- https://docs.px4.io/main/en/concept/flight_tasks
+- https://docs.px4.io/main/en/concept/control_allocation
+- https://docs.px4.io/main/en/concept/system_startup
+- uORB pub/sub graph: https://docs.px4.io/main/en/middleware/uorb_graph
+- Add a Mavlink message and stream it: https://docs.px4.io/main/en/mavlink/
+- Sign a mavlink message
+- modules and commands reference: https://docs.px4.io/main/en/modules/modules_main
+- inject fault: https://docs.px4.io/main/en/debug/failure_injection
+- plot uorb data: https://docs.px4.io/main/en/debug/plotting_realtime_uorb_data
+- TODO: pick from advanced topics: https://docs.px4.io/main/en/advanced/
+- Write an offboard controller: https://docs.px4.io/main/en/ros/offboard_control
+- Harden the mavlink links for security: https://docs.px4.io/main/en/security/
+- Become a maintainer. Push our changes: https://docs.px4.io/main/en/contribute/maintainers
+
 ## 1. Simulate
 
 **Exercise**: Follow [SITL guide](./sitl.md):
@@ -9,6 +44,7 @@
 **Exercise**: Read logs (ulog files):
   - Use Flight Review, PlotJuggler, and pyulog to plot any uORB topic.
   - Compare setpoints against estimates against actuator outputs.
+  - See all about logging and debugging: https://docs.px4.io/main/en/debug/
 
 **Exercise**: Use the PX4 shell (`pxh>`) while SITL runs:
 - `listener <topic>` to watch live data.
@@ -54,6 +90,7 @@ Mission and mode layer (commander, navigator) sits on top and decides what the c
 - Joan Solà, [Quaternion Kinematics for the Error-State Kalman Filter](https://arxiv.org/abs/1711.02508)
 - Brian Douglas, [Drone simulation and control](https://youtube.com/playlist?list=PLn8PRpmsu08oOLBVYYIwwN_nvuyUqEjrj&si=4D568flTmtK8odty) (YouTube)
 - Chris Rosser, [Ultimate PX4 Tuning Guide](https://youtube.com/playlist?list=PLFPBjpbd5xKRECBsvI3MbmsS8NQJ8l8L9&si=N3wiJo1KoyxyNvKr) (YouTube)
+- PX4 [documentation](https://docs.px4.io/main/en/)
 
 ## 4. Learn PX4 software concepts
 
@@ -66,7 +103,7 @@ Read the PX4 docs, then the source about these concepts:
 - Control: `mc_att_control`, `mc_pos_control`, mixer, actuator allocation
 - Navigation: `navigator`, missions, waypoints, geofencing
 - Commander: safety, mode switching, arming/disarming
-- Parameters: Declared with `DEFINE_PARAMETERS` and tunable at runtime.
+- Parameters and configs: https://docs.px4.io/main/en/advanced/parameters_and_configurations
 - ROMFS startup scripts and airframe configs: These decide what runs on a given vehicle.
 - Board configs via Kconfig: These decide what gets compiled in.
 - Platform layers: NuttX (RTOS on real flight controllers), POSIX (SITL)
@@ -79,6 +116,10 @@ Focus on reading small code paths and answering:
 - What outputs does it publish?
 - What assumptions does it make?
 - How is it scheduled?
+
+### References
+
+- [PX4 Architecture](https://docs.px4.io/main/en/concept/architecture)
 
 ## 5. Learn embedded C++ design patterns in use
 
@@ -97,12 +138,12 @@ Focus on reading small code paths and answering:
 
 Progress through increasingly invasive changes:
 
-- Hello-world module: Write a module that subscribes to a topic and prints it.
 - Write a driver for a new sensor and fuse it into EKF2.
 - Write a work-queue module: Define a new uORB message, publish it, add parameters, and log it to ULog.
 - Write an ntegration test: use MAVSDK to script flights against SITL.
 - Modify a controller: Change rate-controller behavior or add a filter. Measure the effect in logs before and after.
-- Build a custom flight mode: Build a precision-landing or obstacle-related external mode. See ROS 2 interface library (px4-ros2-interface-lib).
+- Build a custom flight mode: Build a precision-landing or obstacle-related external mode.
+- Implement an [offboard control](https://docs.px4.io/main/en/flight_modes/offboard) mode using MAVSDK + Raspberry Pi
 
 ## 7. Engage with the Community
 
