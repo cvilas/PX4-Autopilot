@@ -1,9 +1,31 @@
 # Study plan for PX4-based Multi-Rotor UAS
 
-## Sequence
+## 1. Develop Intuition
+
+The following is an excellent YouTube series (5 videos, ~15 minutes each) to develop a first-principles intuitiion for
+
+* Physics of quadcopters flight
+* The need for cascaded control architecture
+* Other components that make up a flight control system
+  * Sensor models
+  * Airframe dynamic model
+  * Environment model
+  * State estimator
+  * Data logging
+  * Fault detection and protection
+  * Visualisation
+
+**Brian Douglas, [Drone simulation and control](https://youtube.com/playlist?list=PLn8PRpmsu08oOLBVYYIwwN_nvuyUqEjrj&si=4D568flTmtK8odty), 2018**
+![Intuition](./media/intuition.png)
+
+## 2. Enjoy Instant Gratification
+
+- Setup development environment
+- Simulate a quadrotor mission with `px4_sitl`, `QGroundControl` and `Hawkeye`
+- Review telemetry data live in `QGroundControl`
+- Download logs and replay them in `QGroundControl`
 
 - Follow [SITL](./sitl.md) to setup development environment and simulate quadrotor flight
-  - TODO: integrate log reading exercise here from following section
   - Read logs (ulog files):
     - Use Flight Review, PlotJuggler, and pyulog to plot any uORB topic.
     - Compare setpoints against estimates against actuator outputs.
@@ -16,6 +38,9 @@
   - https://docs.px4.io/main/en/sim_sih/
   - https://docs.px4.io/main/en/sim_hawkeye/
   - simulate fail safes: https://docs.px4.io/main/en/simulation/failsafes
+
+## 2. Hello World!
+
 - Write a [Hello World](https://docs.px4.io/main/en/modules/hello_sky) app
   - TODO: create the app here, in a self contained place
   - Write a new uORB topic: https://docs.px4.io/main/en/middleware/uorb
@@ -41,7 +66,7 @@
 - Harden the mavlink links for security: https://docs.px4.io/main/en/security/
 - Become a maintainer. Push our changes: https://docs.px4.io/main/en/contribute/maintainers
 
-## 2. Fly
+## 2. Hands On
 
 - Sign up for GVC and work on it in the backgorund
 - Build and fly the dev kit (Holybro X500 v2)
@@ -78,7 +103,6 @@ Mission and mode layer (commander, navigator) sits on top and decides what the c
 
 - Beard and McLain, [Small Unmanned Aircraft: Theory and Practice](https://github.com/byu-magicc/mavsim_public)
 - Joan Solà, [Quaternion Kinematics for the Error-State Kalman Filter](https://arxiv.org/abs/1711.02508)
-- Brian Douglas, [Drone simulation and control](https://youtube.com/playlist?list=PLn8PRpmsu08oOLBVYYIwwN_nvuyUqEjrj&si=4D568flTmtK8odty) (YouTube)
 - Chris Rosser, [Ultimate PX4 Tuning Guide](https://youtube.com/playlist?list=PLFPBjpbd5xKRECBsvI3MbmsS8NQJ8l8L9&si=N3wiJo1KoyxyNvKr) (YouTube)
 - PX4 [documentation](https://docs.px4.io/main/en/)
 
