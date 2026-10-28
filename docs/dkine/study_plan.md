@@ -23,7 +23,8 @@ The following is an excellent YouTube series (5 videos, ~15 minutes each) to dev
 - Setup development environment
 - Simulate a quadrotor mission with `px4_sitl`, `QGroundControl` and `Hawkeye`
 - Review telemetry data live in `QGroundControl`
-- Download logs and replay them in `QGroundControl`
+- Download logs and replay them in `QGroundControl`: https://docs.qgroundcontrol.com/master/en/qgc-user-guide/analyze_view/
+- Replay logs using Hawkeye: https://px4.github.io/Hawkeye/cli
 
 - Follow [SITL](./sitl.md) to setup development environment and simulate quadrotor flight
   - Read logs (ulog files):
@@ -34,7 +35,6 @@ The following is an excellent YouTube series (5 videos, ~15 minutes each) to dev
     - `listener <topic>` to watch live data.
     - `uorb top` to see message rates.
     - `work_queue status` and `perf` to see scheduling and timing.
-  - Using QGC for logs: https://docs.qgroundcontrol.com/master/en/qgc-user-guide/analyze_view/
   - https://docs.px4.io/main/en/sim_sih/
   - https://docs.px4.io/main/en/sim_hawkeye/
   - simulate fail safes: https://docs.px4.io/main/en/simulation/failsafes
